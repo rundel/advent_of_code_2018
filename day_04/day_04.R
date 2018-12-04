@@ -1,8 +1,8 @@
 library(dplyr)
 library(stringr)
 
-#readr::read_lines("day_04/input.txt") %>%
-readr::read_lines("day_04/simple.txt") %>%
+d = readr::read_lines("day_04/input.txt") %>%
+#readr::read_lines("day_04/simple.txt") %>%
   str_match("\\[(.*)\\](?: Guard #(\\d+))? (.*)") %>%
   as.data.frame(stringsAsFactors=FALSE) %>%
   setNames(c("data", "time","id","event")) %>%
@@ -41,16 +41,38 @@ readr::read_lines("day_04/simple.txt") %>%
   group_by(id) %>%
   summarize(
     mins = list(purrr::reduce(mins, `+`))
-  ) %>% 
-  mutate(
-    n_mins = purrr::map_int(mins, sum),
-    common_min = purrr::map_chr(
-      mins, 
-      ~ .x[which.max(.x)]  
-    ),
   )
-  View()
-  
+
+
+# Part 1
+
+mutate(
+  d,
+  n_mins = purrr::map_int(mins, sum),
+  common_min = purrr::map_chr(
+    mins, 
+    ~ names(.x)[which.max(.x)]  
+  ),
+) %>%
+  arrange(desc(n_mins)) %>%
+  mutate(
+    answer = as.integer(id) * as.integer(common_min)
+  )
+
+# Part 2
+
+mutate(
+  d,
+  max = purrr::map_int(mins, max),
+  which_max = purrr::map_chr(
+    mins, 
+    ~ names(.x)[which.max(.x)]  
+  ),
+) %>%
+  arrange(desc(max)) %>%
+  mutate(
+    answer = as.integer(id) * as.integer(which_max)
+  )
 
   
   
