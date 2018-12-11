@@ -27,5 +27,19 @@ Mode <- function(x) {
 }
 
 
-l = purrr::map(1:1000, project, d=d)
-dists = purrr::map_int(l, ~ dist(.x) %>% Mode())
+l = purrr::map(seq(9000, 11000, by=1), project, d=d)
+dists = purrr::map_dbl(l, ~ dist(.x) %>% as.matrix() %>% density() %>% {.$x[which.max(.$y)]})
+plot(dists)
+
+plot(l[[which.min(dists)]])
+
+l[[which.min(dists)]] %>%
+  as.data.frame() %>%
+  mutate(
+    y = -y
+  ) %>%
+  plot()
+
+#JJXZHKFP
+
+which.min(dists)
