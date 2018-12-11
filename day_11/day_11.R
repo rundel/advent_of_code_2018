@@ -27,7 +27,9 @@ which.max(total[]) %>% xyFromCell(total, .) %>% {.-1}
 
 ## Part 2
 
-for(i in 3:10) {
-  total = r %>% raster::focal(w = matrix(1,i,i), sum)
-  cat(i, ":", which.max(total[]) %>% xyFromCell(total, .),"\n")
+for(i in seq(3,19,by=2)) {
+  total = r %>% raster::focal(w = matrix(1, i, i), sum)
+  cat(i, ":", max(total[], na.rm=TRUE), ", ", which.max(total[]) %>% xyFromCell(total, .),"\n")
 }
+
+c(239, 274) - 6
